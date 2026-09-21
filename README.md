@@ -162,3 +162,33 @@ the same topic instance as the producer.
 After these corrections, the complete pipeline processed 10 records, detected
 2 anomalies, and consumed 2 events successfully.
 ---------------------------------------------------------------------------------------------------------------------
+## Task 6: Execute the End-to-End Pipeline
+
+After correcting the anomaly detector and topic mismatch, the provided AIOps
+pipeline was executed successfully.
+
+The complete workflow was:
+
+```text
+Operational Data -> Anomaly Detection -> Event -> Producer -> Topic -> Consumer -> AIOps Output
+```
+
+Execution result:
+
+```text
+Records processed: 10
+Anomalies detected: 2
+Events consumed: 2
+```
+
+The final output represented two detected payment-service issues:
+
+- At `2026-09-20T10:05:00`, the response time was `610 ms` and the log level
+	was `ERROR`, indicating a payment service timeout.
+- At `2026-09-20T10:06:00`, the response time was `640 ms`, CPU usage was
+	`94%`, memory usage was `91%`, and the log level was `ERROR`, indicating a
+	database connection timeout.
+
+This confirms that the operational data was processed, anomalous behavior was
+detected, events were generated and published, the consumer received them,
+and the final AIOps output was produced successfully.
