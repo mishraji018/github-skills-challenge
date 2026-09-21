@@ -295,3 +295,34 @@ The repository includes the original source files, synthetic operational data,
 tests, and documentation needed to reproduce the demonstration. Screenshots
 are provided separately as evidence and do not replace these written
 explanations.
+
+---------------------------------------------------------------------------------------------------------------------
+## Task 8: Run the Provided Validation
+
+The provided validation was completed successfully.
+
+The test suite passed all 8 tests:
+
+```text
+8 passed
+```
+
+The end-to-end pipeline completed with this result:
+
+```text
+Records processed: 10
+Anomalies detected: 2
+Events consumed: 2
+```
+
+A focused event-flow validation also passed:
+
+```text
+Task 8 validation: PASSED
+records=10 anomalies=2 published=2 consumed=2
+```
+
+These checks confirm that the operational data can be processed, anomaly
+detection behaves as expected, anomaly events are generated, events are
+published to the simulated topic, consumers receive and process the events,
+and the final AIOps workflow completes successfully.
