@@ -109,3 +109,40 @@ One issue was observed: the data contains `ERROR` log levels, but the current
 detector checks only for `WARNING`. Therefore, the concerning error log
 information is not added as a detection reason. This is a limitation and
 possible defect to investigate in Task 5.
+
+---------------------------------------------------------------------------------------------------------------------
+## Task 4: Verify the AIOps Event Flow
+
+The provided event components were verified using an anomaly event from the
+`payment-service`.
+
+The event flow is:
+
+```text
+Anomaly Event -> Producer -> Topic -> Consumer -> AIOps Output
+```
+
+- **Event/message:** Represents the detected anomaly, including the service,
+  timestamp, type, and reasons.
+- **Producer:** Publishes the anomaly event.
+- **Topic:** Stores the published event in the in-memory event stream.
+- **Consumer:** Reads and processes the event from the topic.
+- **AIOps output:** Reports the processed anomaly information.
+
+The isolated event-flow test successfully confirmed that an anomaly event was
+created, published by the producer, stored in the `anomaly-events` topic, and
+received and processed by the consumer.
+
+The provided end-to-end pipeline was then executed with the following result:
+
+```text
+Records processed: 10
+Anomalies detected: 2
+Events consumed: 0
+```
+
+The two anomalies were detected, but the final pipeline consumed no events.
+The producer currently uses the `service-events` topic while the consumer uses
+the `anomaly-events` topic. Because these topic names do not match, the
+consumer cannot receive the events published by the producer. This issue is
+recorded for correction in Task 5.
