@@ -89,3 +89,23 @@ usage of 94%, memory usage of 91%, and an `ERROR` log level with the message
 
 These observations are based on the thresholds used by the provided anomaly
 detector.
+---------------------------------------------------------------------------------------------------------------------
+## Task 3: Identify Anomalies
+
+The provided anomaly detector processed all 10 operational records.
+
+Two anomalous observations were detected:
+
+- At `2026-09-20T10:05:00`, the payment service had a response time of
+  `610 ms`, which exceeded the configured threshold.
+- At `2026-09-20T10:06:00`, the payment service had a response time of
+  `640 ms`, CPU usage of `94%`, and memory usage of `91%`.
+
+The detector correctly distinguished the normal observations from the records
+with abnormal metric values. Each generated anomaly event includes the
+timestamp, service name, event type, reasons, and original source record.
+
+One issue was observed: the data contains `ERROR` log levels, but the current
+detector checks only for `WARNING`. Therefore, the concerning error log
+information is not added as a detection reason. This is a limitation and
+possible defect to investigate in Task 5.
