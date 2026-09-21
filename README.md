@@ -192,3 +192,106 @@ The final output represented two detected payment-service issues:
 This confirms that the operational data was processed, anomalous behavior was
 detected, events were generated and published, the consumer received them,
 and the final AIOps output was produced successfully.
+---------------------------------------------------------------------------------------------------------------------
+## Task 7: Document Findings and Reproduce the Demonstration
+
+### AIOps Scenario
+
+This project simulates monitoring for a `payment-service`. AIOps analyzes the
+service's operational telemetry and logs, detects unusual behavior, converts
+detected issues into events, and processes those events through a lightweight
+producer, topic, and consumer workflow.
+
+### Operational Data and Observations
+
+The operational data is stored in `data/service_data.json`. It contains 10
+records with ISO 8601 timestamps at one-minute intervals. The metric fields are
+`response_time_ms`, `cpu_percent`, and `memory_percent`. The log fields are
+`log_level` and `message`. The `service` field identifies the monitored
+application.
+
+Records from `10:00` through `10:04` and from `10:07` through `10:09` appear
+normal because their metrics remain below the configured thresholds and their
+logs are informational. The records at `10:05` and `10:06` are unusual because
+they have high response times and `ERROR` logs. The `10:06` record also has
+CPU usage of `94%` and memory usage of `91%`.
+
+### Anomaly Detection Findings
+
+The detector identified two anomalies:
+
+- `2026-09-20T10:05:00`: high response time and an error log for a payment
+	service timeout.
+- `2026-09-20T10:06:00`: high response time, high CPU, high memory, and an
+	error log for a database connection timeout.
+
+Each anomaly event includes the timestamp, service, event type, reasons, and
+original source record.
+
+### Event-Processing Flow
+
+The event-processing workflow is:
+
+```text
+Operational Data -> Anomaly Detection -> Event -> Producer -> Topic -> Consumer -> AIOps Output
+```
+
+`EventProducer` publishes each anomaly to an in-memory `EventTopic`.
+`EventConsumer` reads the events from that topic and passes the processed event
+to the final pipeline output.
+
+### Issues Identified and Corrected
+
+Two issues were found during investigation:
+
+1. The detector checked only for `WARNING` logs even though the data contained
+	 concerning `ERROR` logs. It was updated to recognize both `WARNING` and
+	 `ERROR`.
+2. The producer and consumer initially used different topics. The consumer was
+	 updated to use the same topic instance as the producer.
+
+### Final Execution Result
+
+After the corrections, the end-to-end pipeline produced:
+
+```text
+Records processed: 10
+Anomalies detected: 2
+Events consumed: 2
+```
+
+This confirms that the data was processed, anomalies were detected, events
+were generated and published, the consumer received them, and the final AIOps
+output represented the detected payment-service issues.
+
+### Limitation and Possible Improvement
+
+The detector uses fixed response-time, CPU, and memory thresholds. It does not
+learn normal behavior dynamically, analyze long-term trends, or correlate
+events across multiple services. Adaptive thresholds based on historical data
+and cross-service event correlation would improve the approach.
+
+### Reproduction Steps
+
+From the repository root, install the dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Run the end-to-end pipeline:
+
+```bash
+python src/aiops_pipeline.py
+```
+
+Run the validation tests:
+
+```bash
+python -m pytest --cov=src --verbose
+```
+
+The repository includes the original source files, synthetic operational data,
+tests, and documentation needed to reproduce the demonstration. Screenshots
+are provided separately as evidence and do not replace these written
+explanations.
