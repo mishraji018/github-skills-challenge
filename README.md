@@ -146,3 +146,19 @@ The producer currently uses the `service-events` topic while the consumer uses
 the `anomaly-events` topic. Because these topic names do not match, the
 consumer cannot receive the events published by the producer. This issue is
 recorded for correction in Task 5.
+---------------------------------------------------------------------------------------------------------------------
+## Task 5: Investigate and Correct the Workflow
+
+Two workflow issues were identified.
+
+First, the anomaly detector checked only for `WARNING` log levels, while the
+operational data contained concerning `ERROR` log levels. The detector was
+updated to recognize both `WARNING` and `ERROR`.
+
+Second, the producer published events to the `service-events` topic while the
+consumer read from the `anomaly-events` topic. The consumer was updated to use
+the same topic instance as the producer.
+
+After these corrections, the complete pipeline processed 10 records, detected
+2 anomalies, and consumed 2 events successfully.
+---------------------------------------------------------------------------------------------------------------------

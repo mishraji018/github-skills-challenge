@@ -20,8 +20,11 @@ def run_pipeline(file_path):
     detector = AnomalyDetector()
     producer = EventProducer(producer_topic)
 
-    # INTENTIONAL ASSESSMENT ISSUE #3
-    consumer_topic = EventTopic("anomaly-events")
+    # # INTENTIONAL ASSESSMENT ISSUE #3
+    # consumer_topic = EventTopic("anomaly-events")
+    # consumer = EventConsumer(consumer_topic)
+
+    consumer_topic = producer_topic
     consumer = EventConsumer(consumer_topic)
 
     detected_events = []
